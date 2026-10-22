@@ -1,0 +1,1657 @@
+{
+  "info": {
+    "name": "RESQ API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman keeps the resq_token cookie automatically. Log in as a role before calling its folder. Set the Origin header to http://localhost:5173 if Postman sends a different one."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "requestId",
+      "value": ""
+    },
+    {
+      "key": "unitId",
+      "value": ""
+    },
+    {
+      "key": "unitId2",
+      "value": ""
+    },
+    {
+      "key": "hospitalId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": "Passw0rd!x"
+    },
+    {
+      "key": "userEmail",
+      "value": "user@example.com"
+    },
+    {
+      "key": "unitEmail",
+      "value": "unit@example.com"
+    },
+    {
+      "key": "hospitalEmail",
+      "value": "hospital@example.com"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@example.com"
+    }
+  ],
+  "item": [
+    {
+      "name": "0 Auth",
+      "item": [
+        {
+          "name": "Register user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"phone\": \"+92 300 1234567\",\n  \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register unit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Driver One\",\n  \"email\": \"unit@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"phone\": \"+92 300 1111111\",\n  \"role\": \"unit\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"City Hospital\",\n  \"email\": \"hospital@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"phone\": \"+92 42 1111111\",\n  \"role\": \"hospital\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register ADMIN (must fail 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mallory\",\n  \"email\": \"m@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"phone\": \"+92 300 1234567\",\n  \"role\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Update profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Name\",\n  \"phone\": \"+92 300 7654321\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "password"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Passw0rd!x\",\n  \"newPassword\": \"Passw0rd!y\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1 User",
+      "item": [
+        {
+          "name": "Login as user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Nearby units (informational)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/nearby-units?lat=31.5204&lng=74.3587&radiusKm=15",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "nearby-units"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "31.5204"
+                },
+                {
+                  "key": "lng",
+                  "value": "74.3587"
+                },
+                {
+                  "key": "radiusKm",
+                  "value": "15"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Nearby hospitals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/nearby?lat=31.5204&lng=74.3587&radiusKm=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "nearby"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "31.5204"
+                },
+                {
+                  "key": "lng",
+                  "value": "74.3587"
+                },
+                {
+                  "key": "radiusKm",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create emergency",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emergencyType\": \"medical\",\n  \"contactNumber\": \"+92 300 7654321\",\n  \"address\": \"Gulberg III, Lahore\",\n  \"latitude\": 31.5204,\n  \"longitude\": 74.3587,\n  \"accuracy\": 15,\n  \"locationSource\": \"gps\",\n  \"description\": \"Chest pain\",\n  \"clientRequestId\": \"demo-key-1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "My requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/my?scope=active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Request details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/{{requestId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "{{requestId}}"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Route + ETA",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/{{requestId}}/route",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "{{requestId}}",
+                "route"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Cancel",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/{{requestId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "{{requestId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"False alarm\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Messages - list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/{{requestId}}/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "{{requestId}}",
+                "messages"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Messages - send",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/emergencies/{{requestId}}/messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "emergencies",
+                "{{requestId}}",
+                "messages"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"We are at the gate\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications"
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 Admin",
+      "item": [
+        {
+          "name": "Login as admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Dashboard stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "dashboard"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reports?days=30",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?role=unit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "unit"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deactivate user",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{userId}}/active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "active"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Units",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/units?verification=pending",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "units"
+              ],
+              "query": [
+                {
+                  "key": "verification",
+                  "value": "pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify unit",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/units/{{unitId}}/review",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "units",
+                "{{unitId}}",
+                "review"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"verified\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Hospitals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/hospitals?verification=pending",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "hospitals"
+              ],
+              "query": [
+                {
+                  "key": "verification",
+                  "value": "pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify hospital",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/hospitals/{{hospitalId}}/review",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "hospitals",
+                "{{hospitalId}}",
+                "review"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"verified\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Incidents (active)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies?scope=active&sort=priority",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies"
+              ],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "active"
+                },
+                {
+                  "key": "sort",
+                  "value": "priority"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Incident details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Candidates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/candidates?radiusKm=15",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "candidates"
+              ],
+              "query": [
+                {
+                  "key": "radiusKm",
+                  "value": "15"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Assign unit",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "assign"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unitId\": \"{{unitId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reassign unit",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/reassign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "reassign"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unitId\": \"{{unitId2}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Propose hospital",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/assign-hospital",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "assign-hospital"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hospitalId\": \"{{hospitalId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Set priority",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/priority",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "priority"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priority\": \"critical\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "cancel"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Duplicate call\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reject",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/emergencies/{{requestId}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "emergencies",
+                "{{requestId}}",
+                "reject"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Prank call\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 Unit",
+      "item": [
+        {
+          "name": "Login as unit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{unitEmail}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"unit\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register unit profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationNumber\": \"LEA-1234\",\n  \"vehicleModel\": \"Toyota HiAce\",\n  \"vehicleType\": \"advanced\",\n  \"contactNumber\": \"+92 300 1111111\",\n  \"capacity\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "My unit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "me"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Send location",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/location",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "location"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": 31.53,\n  \"longitude\": 74.36,\n  \"accuracy\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Go on duty",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "availability"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"availability\": \"available\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Assigned",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/assigned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "assigned"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "history"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Accept",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/{{requestId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "{{requestId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            }
+          }
+        },
+        {
+          "name": "En route",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/{{requestId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "{{requestId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"en-route\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Arrived",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/{{requestId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "{{requestId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"arrived\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Complete",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/{{requestId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "{{requestId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reject assignment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/units/emergencies/{{requestId}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "units",
+                "emergencies",
+                "{{requestId}}",
+                "reject"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Vehicle fault\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 Hospital",
+      "item": [
+        {
+          "name": "Login as hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{hospitalEmail}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"hospital\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register hospital profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "register"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hospitalName\": \"City Hospital\",\n  \"registrationNumber\": \"H-001\",\n  \"address\": \"Mall Road\",\n  \"contactNumber\": \"+92 42 1111111\",\n  \"emergencyCapacity\": 10,\n  \"latitude\": 31.52,\n  \"longitude\": 74.35\n}"
+            }
+          }
+        },
+        {
+          "name": "My hospital",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "me"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Accept emergencies",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "availability"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emergencyAvailability\": \"accepting\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update beds",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/beds",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "beds"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"totalBeds\": 50,\n  \"availableBeds\": 12,\n  \"icuTotal\": 8,\n  \"icuAvailable\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Add staff",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/staff",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "staff"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr Sana\",\n  \"staffRole\": \"doctor\",\n  \"shift\": \"night\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Staff list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/staff",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "staff"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Incoming cases",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/emergencies/incoming",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "emergencies",
+                "incoming"
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "Respond to case",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitals/cases/{{requestId}}/respond",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hospitals",
+                "cases",
+                "{{requestId}}",
+                "respond"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"response\": \"accepted\",\n  \"note\": \"ER bay 2\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
