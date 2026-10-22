@@ -5,6 +5,7 @@ const { cookieBase, clearAuthCookie } = require("../middleware/authMiddleware");
 const { load } = require("../config/env");
 const { HttpError, ok, wrap } = require("../utils/response");
 const v = require("../utils/validate");
+const { queueWelcomeEmail } = require("../queues/emailQueue");
 
 const PUBLIC_ROLES = ["user", "unit", "hospital"]; // admin can never be self-registered
 const ALL_ROLES = ["user", "unit", "hospital", "admin"];
@@ -51,8 +52,29 @@ const registerUser = wrap(async (req, res) => {
     role: body.role, // unit/hospital accounts have NO operational power until an admin verifies their profile
     isVerified: false,
   });
+let emailQueued = false;
 
-  return ok(res, { message: "Account created successfully", user: safeUser(user) }, 201);
+try {
+  await queueWelcomeEmail({
+    name: user.name,
+    email: user.email,
+  });
+
+  emailQueued = true;
+} catch (error) {
+  // Account create ho chuka hai; email queue failure ko log karo.
+  console.error("Could not queue welcome email:", error.message);
+}
+
+return ok(
+  res,
+  {
+    message: "Account created successfully",
+    user: safeUser(user),
+    emailQueued,
+  },
+  201
+);
 });
 
 const loginUser = wrap(async (req, res) => {

@@ -36,25 +36,75 @@ export const useSocket = () => useContext(Ctx);
  * so a page that missed events while offline re-syncs from the REST API.
  * The database stays the source of truth; events only signal "refetch".
  */
-export function useLive(events: string[], onEvent: (event: string, payload?: unknown) => void) {
+export function useLive(
+  events: string[],
+  onEvent: (event: string, payload?: unknown) => void,
+  debounceMs = 0
+) {
   const { socket } = useSocket();
   const cb = useRef(onEvent);
-  useEffect(() => { cb.current = onEvent; });
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pending = useRef<{
+    event: string;
+    payload?: unknown;
+  } | null>(null);
+
+  useEffect(() => {
+    cb.current = onEvent;
+  });
+
   const key = events.join("|");
 
   useEffect(() => {
     if (!socket) return;
-    const handlers = events.map((ev) => {
-      const h = (payload?: unknown) => cb.current(ev, payload);
-      socket.on(ev, h);
-      return [ev, h] as const;
-    });
-    const resync = () => cb.current("resync");
-    socket.io.on("reconnect", resync);
-    return () => {
-      handlers.forEach(([ev, h]) => socket.off(ev, h));
-      socket.io.off("reconnect", resync);
+
+    const dispatch = (event: string, payload?: unknown) => {
+      if (debounceMs <= 0) {
+        cb.current(event, payload);
+        return;
+      }
+
+      // Keep the latest event while batching a burst of events.
+      pending.current = { event, payload };
+
+      if (timer.current !== null) return;
+
+      timer.current = setTimeout(() => {
+        timer.current = null;
+
+        const latest = pending.current;
+        pending.current = null;
+
+        if (latest) {
+          cb.current(latest.event, latest.payload);
+        }
+      }, debounceMs);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, key]);
+
+    const handlers = events.map((event) => {
+      const handler = (payload?: unknown) => dispatch(event, payload);
+
+      socket.on(event, handler);
+      return [event, handler] as const;
+    });
+
+    const resync = () => dispatch("resync");
+
+    socket.io.on("reconnect", resync);
+
+    return () => {
+      handlers.forEach(([event, handler]) => {
+        socket.off(event, handler);
+      });
+
+      socket.io.off("reconnect", resync);
+
+      if (timer.current !== null) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+
+      pending.current = null;
+    };
+  }, [socket, key, debounceMs]);
 }

@@ -13,6 +13,8 @@ const { parseNearbyQuery, findUnitsNear, attachRoutes } = require("../services/d
 const { computeTimings } = require("../services/metrics");
 const { load } = require("../config/env");
 const sockets = require("../socket");
+const { getOrSetCache } = require("../utils/cache");
+
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const POPULATE = [
@@ -383,42 +385,272 @@ const assignHospitalToEmergency = wrap(async (req, res) => {
 const buildStats = async () => {
   const [
     usersByRole,
-    unitsTotal, unitsVerified, unitsPending, unitsAvailable, unitsBusy, unitsOffline,
-    hospTotal, hospVerified, hospPending, hospAccepting,
-    reqTotal, reqPending, reqActive, reqCompleted, reqCancelled,
+    unitStats,
+    hospitalStats,
+    emergencyStats,
     timingRows,
   ] = await Promise.all([
-    User.aggregate([{ $group: { _id: "$role", n: { $sum: 1 } } }]),
-    Unit.countDocuments(),
-    Unit.countDocuments({ verificationStatus: "verified" }),
-    Unit.countDocuments({ verificationStatus: "pending" }),
-    Unit.countDocuments({ verificationStatus: "verified", availability: "available" }),
-    Unit.countDocuments({ verificationStatus: "verified", availability: "busy" }),
-    Unit.countDocuments({ verificationStatus: "verified", availability: "offline" }),
-    Hospital.countDocuments(),
-    Hospital.countDocuments({ verificationStatus: "verified" }),
-    Hospital.countDocuments({ verificationStatus: "pending" }),
-    Hospital.countDocuments({ verificationStatus: "verified", emergencyAvailability: "accepting" }),
-    EmergencyRequest.countDocuments(),
-    EmergencyRequest.countDocuments({ status: "pending" }),
-    EmergencyRequest.countDocuments({ status: { $in: ACTIVE_STATUSES } }),
-    EmergencyRequest.countDocuments({ status: "completed" }),
-    EmergencyRequest.countDocuments({ status: "cancelled" }),
-    EmergencyRequest.find({ assignedAt: { $ne: null } }).sort({ createdAt: -1 }).limit(500).select("createdAt assignedAt statusHistory").lean(),
+    User.aggregate([
+      {
+        $group: {
+          _id: "$role",
+          n: { $sum: 1 },
+        },
+      },
+    ]),
+
+    Unit.aggregate([
+      {
+        $group: {
+          _id: null,
+
+          total: { $sum: 1 },
+
+          verified: {
+            $sum: {
+              $cond: [
+                { $eq: ["$verificationStatus", "verified"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          pending: {
+            $sum: {
+              $cond: [
+                { $eq: ["$verificationStatus", "pending"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          available: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$verificationStatus", "verified"] },
+                    { $eq: ["$availability", "available"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          busy: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$verificationStatus", "verified"] },
+                    { $eq: ["$availability", "busy"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          offline: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$verificationStatus", "verified"] },
+                    { $eq: ["$availability", "offline"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: { _id: 0 },
+      },
+    ]),
+
+    Hospital.aggregate([
+      {
+        $group: {
+          _id: null,
+
+          total: { $sum: 1 },
+
+          verified: {
+            $sum: {
+              $cond: [
+                { $eq: ["$verificationStatus", "verified"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          pending: {
+            $sum: {
+              $cond: [
+                { $eq: ["$verificationStatus", "pending"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          accepting: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$verificationStatus", "verified"] },
+                    { $eq: ["$emergencyAvailability", "accepting"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: { _id: 0 },
+      },
+    ]),
+
+    EmergencyRequest.aggregate([
+      {
+        $group: {
+          _id: null,
+
+          total: { $sum: 1 },
+
+          pending: {
+            $sum: {
+              $cond: [
+                { $eq: ["$status", "pending"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          active: {
+            $sum: {
+              $cond: [
+                { $in: ["$status", ACTIVE_STATUSES] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          completed: {
+            $sum: {
+              $cond: [
+                { $eq: ["$status", "completed"] },
+                1,
+                0,
+              ],
+            },
+          },
+
+          cancelled: {
+            $sum: {
+              $cond: [
+                { $eq: ["$status", "cancelled"] },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: { _id: 0 },
+      },
+    ]),
+
+    EmergencyRequest.find({
+      assignedAt: { $ne: null },
+    })
+      .sort({ createdAt: -1 })
+      .limit(500)
+      .select("createdAt assignedAt statusHistory")
+      .lean(),
   ]);
-  const roles = Object.fromEntries(usersByRole.map((r) => [r._id, r.n]));
-  const data = {
-    users: { total: roles.user || 0, byRole: roles },
-    units: { total: unitsTotal, verified: unitsVerified, pending: unitsPending, available: unitsAvailable, assigned: unitsBusy, offline: unitsOffline },
-    hospitals: { total: hospTotal, verified: hospVerified, pending: hospPending, accepting: hospAccepting },
-    emergencies: { total: reqTotal, pending: reqPending, active: reqActive, completed: reqCompleted, cancelled: reqCancelled },
+
+  const roles = Object.fromEntries(
+    usersByRole.map((r) => [r._id, r.n])
+  );
+
+  const units = unitStats[0] || {
+    total: 0,
+    verified: 0,
+    pending: 0,
+    available: 0,
+    busy: 0,
+    offline: 0,
+  };
+
+  const hospitals = hospitalStats[0] || {
+    total: 0,
+    verified: 0,
+    pending: 0,
+    accepting: 0,
+  };
+
+  const emergencies = emergencyStats[0] || {
+    total: 0,
+    pending: 0,
+    active: 0,
+    completed: 0,
+    cancelled: 0,
+  };
+
+  return {
+    users: {
+      total: roles.user || 0,
+      byRole: roles,
+    },
+
+    units: {
+      total: units.total,
+      verified: units.verified,
+      pending: units.pending,
+      available: units.available,
+      assigned: units.busy,
+      offline: units.offline,
+    },
+
+    hospitals: {
+      total: hospitals.total,
+      verified: hospitals.verified,
+      pending: hospitals.pending,
+      accepting: hospitals.accepting,
+    },
+
+    emergencies: {
+      total: emergencies.total,
+      pending: emergencies.pending,
+      active: emergencies.active,
+      completed: emergencies.completed,
+      cancelled: emergencies.cancelled,
+    },
+
     timings: computeTimings(timingRows),
+
     generatedAt: new Date().toISOString(),
   };
-  return data;
 };
 
-const getDashboardStats = wrap(async (req, res) => ok(res, { data: await buildStats() }));
 
 const getReports = wrap(async (req, res) => {
   const days = Math.min(365, Math.max(1, parseInt(req.query.days, 10) || 30));
@@ -452,9 +684,30 @@ const getReports = wrap(async (req, res) => {
 });
 
 // keeps the original /dashboard contract (message + admin) and adds live stats
-const getDashboard = wrap(async (req, res) =>
-  ok(res, { message: "Welcome to the ResQ Admin Dashboard", admin: req.user, data: await buildStats() })
-);
+
+
+const getCachedDashboardStats = () =>
+  getOrSetCache(
+    "admin:dashboard:stats:v1",
+    buildStats,
+    10
+  );
+
+const getDashboardStats = wrap(async (req, res) => {
+  const stats = await getCachedDashboardStats();
+  return ok(res, { data: stats });
+});
+
+const getDashboard = wrap(async (req, res) => {
+  const stats = await getCachedDashboardStats();
+
+  return ok(res, {
+    message: "Welcome to the ResQ Admin Dashboard",
+    admin: req.user,
+    data: stats,
+  });
+});
+
 
 module.exports = {
   assignUnitRole, getPendingUnits, reviewUnit, assignHospitalRole, getPendingHospitals, reviewHospital,
