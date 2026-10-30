@@ -25,13 +25,6 @@ Geolocation needs HTTPS or `localhost`. If the frontend runs on another origin s
 5. **Admin** → Incidents & Dispatch: open the request, review candidates (straight-line + road ETA), *Assign*. Optionally propose a hospital.
 6. **Unit** → Requests: *Accept*; Active Assignment: *Start travelling → I have arrived → Complete*. **User** → Live Status shows the route, ETA, unit position age and timeline in real time.
 
-## Tests
-```bash
-cd backend
-npm test                    # 41 tests, no database needed (state machine, geo, routing, metrics, privacy, auth, role matrix, CSRF, rate limit, validation)
-npm run test:integration    # end-to-end flow against in-memory MongoDB (downloads mongod once)
-```
-See `docs/TESTING.md` for what was actually executed.
 
 ## Documentation
 `docs/API.md` (endpoints, roles, validation) · `docs/ARCHITECTURE.md` (design decisions, security, limitations).
